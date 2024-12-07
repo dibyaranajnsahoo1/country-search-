@@ -207,9 +207,7 @@ const XCountriesSearch = () => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-        {loading ? (
-          <p>Loading...</p> 
-        ) : !success ? (
+        {!success ? (
           <p>No countries found</p> 
         ) : (
           countryList.map((country) => (
