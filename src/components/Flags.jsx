@@ -14,10 +14,11 @@ const Flag = () => {
     const fetchFlags = async () => {
         try {
             const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP status ${response.status}`);
             const actualData = await response.json();
             setFlags(actualData);
         } catch (error) {
-            console.error("Error fetching data:" + error);
+            console.error("Error fetching data:", error);
         }
     };
 
@@ -27,7 +28,12 @@ const Flag = () => {
 
     return (
         <div>
-            <input type="text"  placeholder="Search for a country..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+            
+            <input
+                type="text"
+                placeholder="Search for a country..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
                     margin: "20px auto",
                     display: "block",
@@ -40,8 +46,15 @@ const Flag = () => {
                 }}
             />
 
-            
-            <div style={{display: "flex",flexWrap: "wrap",gap: "10px",alignItems: "center",justifyContent: "center",}} >
+            <div
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
                 {filteredFlags.length > 0 ? (
                     filteredFlags.map((country) => (
                         <FlagItems
@@ -51,7 +64,13 @@ const Flag = () => {
                         />
                     ))
                 ) : (
-                    <p style={{ fontSize: "18px", color: "#888" }}>No countries found. </p>
+                    <p     style={{
+                            fontSize: "18px",
+                            color: "#888",
+                        }}
+                    >
+                        No countries found.
+                    </p>
                 )}
             </div>
         </div>
