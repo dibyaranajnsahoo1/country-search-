@@ -1,11 +1,11 @@
-import logo from './logo.svg';
+
 import './App.css';
-import Flag from './components/Flags'
+import CountrySearch from './components/CountrySearch'
 
 function App() {
   return (
     <div className="App">
-     <Flag/>
+      <CountrySearch />
     </div>
   );
 }
