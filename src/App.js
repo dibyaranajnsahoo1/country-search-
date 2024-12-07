@@ -1,11 +1,11 @@
 
 import './App.css';
-import CountrySearch from './components/CountrySearch'
+import XCountriesSearch from './components/XCountriesSearch'
 
 function App() {
   return (
     <div className="App">
-      <CountrySearch />
+      <XCountriesSearch />
     </div>
   );
 }
