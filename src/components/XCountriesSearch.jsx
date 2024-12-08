@@ -111,7 +111,6 @@
 
 
 import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
 import Card from './Card';
 
 const XCountriesSearch = () => {
@@ -119,7 +118,6 @@ const XCountriesSearch = () => {
   const [totalCountryList, setTotalCountryList] = useState([]);
   const [countryList, setCountryList] = useState([]);
   const [success, setSuccess] = useState(false);
-  
 
   const debounceCreator = (func, delay) => {
     let timer;
@@ -131,74 +129,50 @@ const XCountriesSearch = () => {
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);
-    console.log('SEARCH:', value);
   };
 
   const debounceHandleSearchChange = useMemo(
     () => debounceCreator(handleSearchChange, 500),
-    [] 
+    []
   );
 
-
-  // useEffect(() => {
-  
-  //   fetchData();
-  // }, []);
-
-  // const fetchData = async () => {
-  //   try {
-     
-  //     const fetchResult = await axios.get('https://restcountries.com/v3.1/all');
-  //     setTotalCountryList(fetchResult.data);
-  //     setCountryList(fetchResult.data);
-  //     setSuccess(true);
-  //   } catch (err) {
-  //     console.log('Error:'+ err);
-  //     setSuccess(false);
-  //   } finally {
-    
-  //   }
-  // };
-
-
+  // Fetch country data
   useEffect(() => {
     fetch('https://restcountries.com/v3.1/all')
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            setTotalCountryList(data);
-            setCountryList(data);
-            setSuccess(true);
-        })
-        .catch((error) => {
-            console.error("Error fetching data:", error);
-            setSuccess(false);
-        });
-}, []);
-
-
-  useEffect(() => {
-    try {
-      if (searchQuery === '') {
-        setSuccess(true);
-        setCountryList(totalCountryList);
-      } else {
-        const filteredCountries = totalCountryList.filter((country) =>
-          country.name.common.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        if (filteredCountries.length > 0) {
-          setSuccess(true);
-          setCountryList(filteredCountries);
-        } else {
-          setSuccess(false);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-      }
-    } catch (err) {
-      console.log('Error:', err);
+        return response.json();
+      })
+      .then((data) => {
+        setTotalCountryList(data);
+        setCountryList(data);
+        setSuccess(true);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+        setSuccess(false);
+      });
+  }, []);
+
+  // Filter countries based on search query
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setCountryList(totalCountryList);
+      setSuccess(true);
+      return;
+    }
+
+    const filteredCountries = totalCountryList.filter((country) =>
+      country.name.common.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (filteredCountries.length > 0) {
+      setCountryList(filteredCountries);
+      setSuccess(true);
+    } else {
+      setCountryList([]);
       setSuccess(false);
     }
   }, [searchQuery, totalCountryList]);
@@ -222,22 +196,25 @@ const XCountriesSearch = () => {
           }}
         />
       </header>
-      
-      <div className="countryCardContainer" style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+
+      <div
+        className="countryCardContainer"
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '10px',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         {!success ? (
-          <p>No countries found</p> 
+          <p>No countries found</p>
         ) : (
           countryList.map((country) => (
             <Card
-              key={country.cca3} 
-              countryFlag={country.flags.png}
-              countryName={country.name.common}
+              key={country.cca3}
+              image={country.flags.png}
+              name={country.name.common}
             />
           ))
         )}
@@ -245,5 +222,4 @@ const XCountriesSearch = () => {
     </div>
   );
 };
-
 export default XCountriesSearch;
