@@ -136,7 +136,6 @@ const XCountriesSearch = () => {
     []
   );
 
-  // Fetch country data
   useEffect(() => {
     fetch('https://restcountries.com/v3.1/all')
       .then((response) => {
@@ -151,12 +150,11 @@ const XCountriesSearch = () => {
         setSuccess(true);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:'+ error);
         setSuccess(false);
       });
   }, []);
 
-  // Filter countries based on search query
   useEffect(() => {
     if (searchQuery.trim() === '') {
       setCountryList(totalCountryList);
