@@ -119,7 +119,7 @@ const XCountriesSearch = () => {
   const [totalCountryList, setTotalCountryList] = useState([]);
   const [countryList, setCountryList] = useState([]);
   const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(true); 
+  
 
   const debounceCreator = (func, delay) => {
     let timer;
@@ -139,24 +139,47 @@ const XCountriesSearch = () => {
     [] 
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const fetchResult = await axios.get('https://restcountries.com/v3.1/all');
-        setTotalCountryList(fetchResult.data);
-        setCountryList(fetchResult.data);
-        setSuccess(true);
-      } catch (err) {
-        console.log('Error:', err);
-        setSuccess(false);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  
+  //   fetchData();
+  // }, []);
+
+  // const fetchData = async () => {
+  //   try {
+     
+  //     const fetchResult = await axios.get('https://restcountries.com/v3.1/all');
+  //     setTotalCountryList(fetchResult.data);
+  //     setCountryList(fetchResult.data);
+  //     setSuccess(true);
+  //   } catch (err) {
+  //     console.log('Error:'+ err);
+  //     setSuccess(false);
+  //   } finally {
+    
+  //   }
+  // };
+
+
+  useEffect(() => {
+    fetch('https://restcountries.com/v3.1/all')
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            setTotalCountryList(data);
+            setCountryList(data);
+            setSuccess(true);
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+            setSuccess(false);
+        });
+}, []);
+
 
   useEffect(() => {
     try {
